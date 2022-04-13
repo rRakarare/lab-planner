@@ -41,6 +41,7 @@ const LinkItems = [
   { name: "Home", icon: FiHome, href: "/" },
   { name: "Projekte", icon: FiStar, href: "/projekte" },
   { name: "Clients", icon: FiStar, href: "/clients" },
+  { name: "Analyzer", icon: FiStar, href: "/analyzer" },
 ];
 
 export default function Navbar({ children }) {

@@ -18,6 +18,14 @@ model User {
   role     Role     @default(USER)
 }
 
+model Analyzer {
+  id     Int    @id @default(autoincrement())
+  name   String
+  width  Float
+  height Float
+  depth  Float
+}
+
 enum IsActive {
   ACTIVE
   INACTIVE
@@ -28,12 +36,8 @@ enum Role {
   ADMIN
 }
 
-
-
 model Client {
-  id       Int       @id @default(autoincrement())
-  name     String
-  imgUrl   String
+  id     Int    @id @default(autoincrement())
+  name   String
+  imgUrl String
 }
-
-

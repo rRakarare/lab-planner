@@ -47,6 +47,7 @@ export default function Analyzer({ data }) {
       cell: (e) => {
         const teiler = 100;
         refs.push(useRef());
+        console.log(e);
         console.log(refs[e.id]);
         return (
           <Canvas>
@@ -124,6 +125,11 @@ export async function getStaticProps() {
         },
       },
     },
+    orderBy: [
+      {
+        id: 'asc'
+      }
+    ]
   });
 
   return {

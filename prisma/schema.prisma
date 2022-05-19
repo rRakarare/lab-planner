@@ -56,9 +56,4 @@ model Project {
   analyzers Analyzer[]
 }
 
-model Anything {
-  id        Int        @id @default(autoincrement())
-  name      String
-}
-
 

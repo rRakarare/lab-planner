@@ -6,10 +6,11 @@ import { Button, Container, ListItem, UnorderedList, FormControl,
   import { Canvas, useFrame } from '@react-three/fiber';
   import { Box, OrbitControls } from '@react-three/drei'
   import { GLTFExporter } from "three/examples/jsm/exporters/GLTFExporter";
-  import React, { useRef } from "react";
-  import { useForm } from "react-hook-form";
+  import React, { useRef, useState } from "react";
+  import { useForm, Controller } from "react-hook-form";
   import axios from "axios";
   import { useRouter } from 'next/router';
+  import { SketchPicker } from "react-color";
   import {
     AsyncCreatableSelect,
     AsyncSelect,
@@ -21,6 +22,7 @@ export default function Create({ clients }) {
   
     const [isLoading, setLoading] = useBoolean(false);
     const router = useRouter()
+    const [color, setColor] = useState("#808080");
   
     const {
       register,
@@ -32,13 +34,14 @@ export default function Create({ clients }) {
   
 
     const submit = async (data) => {
+      data["Color"] = color
       console.log(data)
       await axios.post("/api/analyzer/create",data);
       setLoading.off();
       router.push("/analyzer")
     };
 
-    const clientOptions = []
+    const clientOptions = [];
     
     for (let i = 0; i < clients.length; i++) {
         clientOptions.push({
@@ -57,9 +60,16 @@ export default function Create({ clients }) {
         <Container         
           as="form"
           p={6}
-          
           onSubmit={handleSubmit(submit)}>
-          <FormControl>
+          <Controller
+            control={control}
+            name="analyzer"
+            rules={{ required: "Please enter at least one food group." }}
+            render={({
+              field: { onChange, onBlur, value, name, ref },
+              fieldState: { invalid, error }
+            }) => (
+          <FormControl id="analyzer">
             <FormLabel htmlFor="name">Name</FormLabel>
             <Input
               id="name"
@@ -67,45 +77,108 @@ export default function Create({ clients }) {
               {...register("name", {
               })}
             />
-             <FormLabel htmlFor="width">Width</FormLabel>
+             <FormLabel htmlFor="width">Breite [mm]</FormLabel>
             <Input
               id="width"
               bgColor = "White"
               {...register("width", {
               })}
             />
-             <FormLabel htmlFor="height">Height</FormLabel>
+             <FormLabel htmlFor="height">Höhe [mm]</FormLabel>
             <Input
               id="height"
               bgColor = "White"
               {...register("height", {
               })}
             />
-             <FormLabel htmlFor="depth">Depth</FormLabel>
+            <FormLabel htmlFor="depth">Tiefe [mm]</FormLabel>
             <Input
               id="depth"
               bgColor = "White"
               {...register("depth", {
               })}
             />
+            <FormLabel htmlFor="weight">Gewicht [KG]</FormLabel>
+            <Input
+              id="weight"
+              bgColor = "White"
+              {...register("weight", {
+              })}
+            />
+            <FormLabel htmlFor="waermelast">Wärmelast [BTU oder Joule]</FormLabel>
+            <Input
+              id="waermelast"
+              bgColor = "White"
+              {...register("waermelast", {
+              })}
+            />
+            <FormLabel htmlFor="maxLeistungsaufnahme">max. elektr. Leistungsaufnahme [W]</FormLabel>
+            <Input
+              id="maxLeistungsaufnahme"
+              bgColor = "White"
+              {...register("maxLeistungsaufnahme", {
+              })}
+            />
+            <FormLabel htmlFor="avgLeistungsaufnahme">Ø elektr. Leistungsaufnahme [W]</FormLabel>
+            <Input
+              id="avgLeistungsaufnahme"
+              bgColor = "White"
+              {...register("avgLeistungsaufnahme", {
+              })}
+            />
+            <FormLabel htmlFor="avgWasserverbrauch">Ø Wasserverbrauch [L/std]</FormLabel>
+            <Input
+              id="avgWasserverbrauch"
+              bgColor = "White"
+              {...register("avgWasserverbrauch", {
+              })}
+            />
+            <FormLabel htmlFor="druckluft">Druckluft [Bar]</FormLabel>
+            <Input
+              id="druckluft"
+              bgColor = "White"
+              {...register("druckluft", {
+              })}
+            />
+            <FormLabel htmlFor="wasserqualitaet">Wasserqualität [µS]</FormLabel>
+            <Input
+              id="wasserqualitaet"
+              bgColor = "wasserqualitaet"
+              {...register("depth", {
+              })}
+            />
+            <FormLabel htmlFor="sound">Geräuschpegel [dB]</FormLabel>
+            <Input
+              id="sound"
+              bgColor = "White"
+              {...register("sound", {
+              })}
+            />
             <FormLabel>
             Client
             </FormLabel>
-            <Input
-              id="client"
-              bgColor = "White"
-              {...register("client", {
-              })}
-            />
-        {/*}    <Select
-              id="client"
+            <Select
+              name="client"
+              ref={ref}
+              onChange={onChange}
+              onBlur={onBlur}
+              value={value}
               options={clientOptions}
-              placeholder="Select a client..."
+              placeholder="Clients"
               closeMenuOnSelect={true}
-              colorScheme = "White"
-              {...register("client", {})}
-            />*/}
+            />
+            <FormLabel>
+              Color
+            </FormLabel>
+            <SketchPicker
+              color={color}
+              onChangeComplete={color => {
+                setColor(color.hex);
+              }}
+            />
           </FormControl>
+        )}
+        />
           <Button
             mt={4}
             isLoading={isLoading}

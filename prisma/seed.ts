@@ -16,8 +16,8 @@ async function main(username:string, password:string) {
   });
 }
 
-const username = "admin";
-const password = bcrypt.hashSync("admin", 10);
+const username = "ole";
+const password = bcrypt.hashSync("ole", 10);
 
 main(username, password)
   .catch((e) => {

@@ -8,8 +8,9 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import React, { useRef, useState } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Box as Box2, OrbitControls } from '@react-three/drei'
+import { Box as Box2, OrbitControls, PerspectiveCamera } from '@react-three/drei'
 import { GLTFExporter } from "three/examples/jsm/exporters/GLTFExporter";
+import { SliderPicker } from 'react-color';
 
 
 
@@ -19,6 +20,8 @@ export default function Analyzer({ data }) {
   const refs = []
 
   const router = useRouter()
+
+
   
 
   const columns = [
@@ -42,24 +45,37 @@ export default function Analyzer({ data }) {
       name: "Client",
       selector: (row) => row.client.name,
     },
+    
     {
       name: "Model",
+      width: "350px",
       cell: (e) => {
-        const teiler = 100;
-        refs.push(useRef());
+        const teiler = 1;
+        const [color, setColor] = useState(e.color);
+        console.log(color)
+        refs[e.id] = (useRef());
+        console.log(refs)
         console.log(e);
         console.log(refs[e.id]);
         return (
+          <div>
+            <SliderPicker
+              color={color}
+              onChangeComplete={color => {
+                setColor(color.hex);
+              }}
+            />
           <Canvas>
           <OrbitControls
             autoRotate/>
-            <ambientLight intensity={0.1} />
-            <directionalLight color="red" position={[0, 0, 5]} />
-            <mesh ref={refs[e.id]}>
+            <ambientLight intensity={0.7} />
+            <directionalLight color="white" position={[0, 0, 5]} />
+            <mesh ref={refs[e.id]} scale={0.01}>
               <boxGeometry args={[e.width/teiler, e.height/teiler, e.depth/teiler]}/>
-              <meshPhongMaterial color="white"/>
+              <meshPhongMaterial color={color}/>
             </mesh>
           </Canvas>
+          </div>
         )
       }
     },
@@ -91,7 +107,7 @@ export default function Analyzer({ data }) {
           await axios.post('/api/analyzer/delete',{id:id})
           router.replace(router.asPath);
         }
-        return <Icon onClick={()=> del(e.id)} p={2} h={7} w={7} cursor={"pointer"} as={FaTrash}/>;
+        return <Icon onClick={()=> del(e.id) } p={2} h={7} w={7} cursor={"pointer"} as={FaTrash}/>;
       },
     },
   ];
@@ -119,6 +135,7 @@ export async function getStaticProps() {
       width: true,
       height: true,
       depth: true,
+      color: true,
       client: {
         select: {
           name: true,

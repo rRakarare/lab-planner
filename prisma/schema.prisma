@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  url = env("DATABASE_URL")
 }
 
 model User {
@@ -26,9 +26,18 @@ model Analyzer {
   width     Float
   height    Float
   depth     Float
+  weight    Float?
+  waermelast Float?
+  maxLeistungsaufnahme  Float?
+  avgLeistungsaufnahme  Float?
+  avgWasserverbrauch  Float?
+  druckluft Float?
+  wasserqualitaet  Float?
+  sound     Float?
   clientId  Int
   zaehler   Int     @default(0)
-  projects  Project[]
+  countAnalyzer  countAnalyzer[]
+  color     String
 }
 
 enum IsActive {
@@ -50,10 +59,19 @@ model Client {
 
 model Project {
   id        Int        @id @default(autoincrement())
-  name      String
+  name      String     @unique
   user      User       @relation(references: [id], fields: [userId])
   userId    Int
-  analyzers Analyzer[]
+  countAnalyzer countAnalyzer[]
+}
+
+model countAnalyzer {
+  id        Int        @id @default(autoincrement())
+  count     Int
+  analyzer  Analyzer  @relation(references: [id], fields: [analyzerId])
+  analyzerId Int
+  project   Project   @relation(references: [id], fields: [projectId])
+  projectId Int
 }
 
 

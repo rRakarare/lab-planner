@@ -4,17 +4,22 @@ import { Button, Container, ListItem, UnorderedList, FormControl,
   Input,} from "@chakra-ui/react";
 import prisma from "../../../lib/prisma";
 import { Canvas, useFrame } from '@react-three/fiber';
-import { Box, OrbitControls } from '@react-three/drei'
+import { Stage } from "@react-three/drei";
+import { Box, OrbitControls, PerspectiveCamera } from '@react-three/drei'
 import { GLTFExporter } from "three/examples/jsm/exporters/GLTFExporter";
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { useRouter } from 'next/router'
+import { SketchPicker } from 'react-color';
+
+
 
 
 
 export default function AnalyzerDetail({ analyzer }) {
-  const teiler = 40;
+  const [color, setColor] = useState(analyzer.color);
+  const teiler = 1;
   const ref = useRef();
 
   const [isLoading, setLoading] = useBoolean(false);
@@ -31,11 +36,14 @@ export default function AnalyzerDetail({ analyzer }) {
   console.log(analyzer)
 
   const submit = async (data) => {
+    data['color'] = color
     console.log(data);
     await axios.post("/api/analyzer/update",data);
     setLoading.off();
     router.push("/analyzer/" + analyzer.id)
   };
+
+
 
 
 
@@ -46,7 +54,6 @@ export default function AnalyzerDetail({ analyzer }) {
       <Container         
         as="form"
         p={6}
-        
         onSubmit={handleSubmit(submit)}>
         <FormControl>
           <FormLabel htmlFor="name">Name</FormLabel>
@@ -90,18 +97,25 @@ export default function AnalyzerDetail({ analyzer }) {
         >
           Update
         </Button>
+        <SketchPicker
+          color={color}
+          onChangeComplete={color => {
+            setColor(color.hex);
+          }}
+        />
       </Container>
       <div>
       <Canvas>
       <OrbitControls
         autoRotate/>
-        <ambientLight intensity={0.3} />
-        <directionalLight color="red" position={[0, 0, 5]} />
-        <mesh ref={ref}>
+        <ambientLight intensity={0.7} />
+        <directionalLight color="white" position={[0, 0, 5]} />
+        <mesh ref={ref} scale={0.02}>
           <boxGeometry args={[analyzer.width/teiler, analyzer.height/teiler, analyzer.depth/teiler]}/>
-          <meshPhongMaterial color="white"/>
+          <meshPhongMaterial color={color}/>
         </mesh>
       </Canvas>
+
       </div>
       <Button onClick={()=>exportdata(ref, analyzer.name + ".gltf")}>Export</Button> 
     <Button onClick={()=>updateAnalyzer()}>Save Changes</Button>

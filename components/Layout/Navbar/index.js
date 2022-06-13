@@ -185,9 +185,9 @@ const MobileNav = ({ onOpen, ...rest }) => {
                   spacing="1px"
                   ml="2"
                 >
-
+                  <Text fontSize="sm">{session.user.username}</Text>
                   <Text fontSize="xs" color="gray.600">
-
+                  {session.user.role}
                 </Text>
                 </VStack>
                 <Box display={{ base: "none", md: "flex" }}>

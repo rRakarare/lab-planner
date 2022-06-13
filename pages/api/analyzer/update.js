@@ -17,6 +17,7 @@ export default async function handle(req, res) {
             width: width,
             height: height,
             depth: depth,
+            color: req.body["color"]
         }
     })
 

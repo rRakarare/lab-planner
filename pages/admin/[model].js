@@ -25,6 +25,7 @@ const displayMap = {
   Client: "name",
 };
 
+
 export async function getServerSideProps({ params }) {
   const model = params.model.toString();
 
@@ -38,6 +39,7 @@ export async function getServerSideProps({ params }) {
 
   /// Filter relational fields out
   const fields = fieldsraw.filter((item) => item.kind != "object");
+  console.log(fields)
 
   /// Create Object with additional Querys (ids -> data)
   let idConverts = {};
@@ -177,6 +179,7 @@ export default function Content({ data, fields, relatedData, model, enums }) {
         header: item.name,
         key: item.name,
       }));
+      console.log(data)
       const book = exportData(headers, data);
       safeWorkBook(book, `${model}-data`);
     },

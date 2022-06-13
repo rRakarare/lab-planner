@@ -37,6 +37,7 @@ export default function Project({ data }) {
       center: true,
       cell: (e) => {
         const del = async (id) => {
+          await axios.post('/api/project/deleteCounts',{id:id})
           await axios.post('/api/project/delete',{id:id})
           router.replace(router.asPath);
         }
@@ -61,6 +62,9 @@ export default function Project({ data }) {
 
 export async function getStaticProps() {
   const data = await prisma.project.findMany({
+    orderBy:{
+      id: 'asc'
+    },
     select: {
       id: true,
       name: true,

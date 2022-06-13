@@ -17,9 +17,11 @@ function MyApp({ Component, pageProps }) {
           height={3}
           showOnShallow={true}
         />
+        <Auth>
           <Navbar>
             <Component {...pageProps} />
           </Navbar>
+        </Auth>
       </ChakraProvider>
     </SessionProvider>
   );

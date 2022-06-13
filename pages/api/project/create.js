@@ -1,22 +1,22 @@
 import prisma from "../../../lib/prisma";
 
 export default async function handle(req, res) {
-    const analyzers = req.body["analyzers"]
-    for (let index = 0; index < analyzers.length; index++) {
-        analyzers[index] = Number(analyzers[index]);
-    }
+    
+    console.log('here1')
+    const analyzers = req.body["addedIds"]
     console.log(analyzers)
-    const test = [1,2]
-  
-    const project = await prisma.project.create({
-        data: {
-            name: req.body["name"],
-            userId: 1,
-            analyzers: {
-                connect: analyzers.map(c => ({ id: c })) || [],
-            }
-        }
-    })
+    const projectId = req.body['projectId']
 
-    res.json(project);
+    const countAnalyzers = await prisma.countAnalyzer.createMany({
+            data: analyzers.map(c => 
+            ({
+                count: 1,
+                projectId: Number(projectId),
+                analyzerId: c
+                
+            })
+            )
+        })
+
+    res.json(countAnalyzers);
 }

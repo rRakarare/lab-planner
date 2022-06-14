@@ -70,7 +70,7 @@ function StatsCards({ data }) {
             py={"5"}
             shadow={"xl"}
             border={"1px solid"}
-            borderColor={useColorModeValue("gray.800", "gray.500")}
+            borderColor={"black"}
             rounded={"lg"}
           >
             <Flex justifyContent={"space-between"}>
@@ -84,7 +84,7 @@ function StatsCards({ data }) {
               </Box>
               <Box
                 my={"auto"}
-                color={useColorModeValue("gray.800", "gray.200")}
+                color={"black"}
                 alignContent={"center"}
               >
                 {<FiServer size={"3em"} />}

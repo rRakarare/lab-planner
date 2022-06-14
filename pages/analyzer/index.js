@@ -49,7 +49,7 @@ export default function Analyzer({ data }) {
     {
       name: "Model",
       width: "350px",
-      cell: (e) => {
+      Cell: (e) => {
         const teiler = 1;
         const [color, setColor] = useState(e.color);
         console.log(color)
